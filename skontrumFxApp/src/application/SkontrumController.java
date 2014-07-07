@@ -85,6 +85,7 @@ public class SkontrumController implements Initializable {
 
 	@FXML
 	private void newFileAction(ActionEvent event) {
+		// TODO Create file which holds scanned barcodes
 		System.out.println("Nowy");
 	}
 
@@ -93,6 +94,12 @@ public class SkontrumController implements Initializable {
 		System.out.println("Wyślij");
 	}
 
+	/**
+	 * Adds new scanned or typed barcode to the list.
+	 *
+	 * @param barcode
+	 *            Book barcode which is added to the list.
+	 */
 	private void addNewCode(String barcode) {
 
 		// separate non-FX thread
@@ -100,7 +107,7 @@ public class SkontrumController implements Initializable {
 
 			@Override
 			public void run() {
-				// update ProgressIndicator on FX thread
+				// update UI on FX thread
 				Platform.runLater(new Runnable() {
 
 					@Override
@@ -111,19 +118,21 @@ public class SkontrumController implements Initializable {
 				});
 
 				try {
-					// imitating work
+					// Allow user to spot scanned barcode is correct ;-)
 					Thread.sleep(1000);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-				// update ProgressIndicator on FX thread
+				// TODO Write barcode to file
+
+				// update UI on FX thread
 				Platform.runLater(new Runnable() {
 
 					@Override
 					public void run() {
 						// add to list
 						codeList.add(barcode);
-						// scroll listview
+						// scroll listview to make last item visible
 						output.scrollTo(codeList.size());
 
 						input.setEditable(true);
