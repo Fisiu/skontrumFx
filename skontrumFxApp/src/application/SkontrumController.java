@@ -15,22 +15,25 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 
 public class SkontrumController implements Initializable {
 
 	private ObservableList<String> codeList;
 
 	@FXML
+	private Button newFile, sendFile, clean;
+	@FXML
 	private ListView<String> output;
 	@FXML
 	private TextField input;
-	@FXML
-	private Button clean;
 	@FXML
 	private Label status;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+
+		appendTooltips();
 
 		codeList = FXCollections.observableArrayList();
 		output.setItems(codeList);
@@ -59,6 +62,19 @@ public class SkontrumController implements Initializable {
 				input.requestFocus();
 			}
 		});
+	}
+
+	/**
+	 * Adds simple tooltips to describe acctions connected with buttons.
+	 */
+	private void appendTooltips() {
+		final Tooltip tooltipNew = new Tooltip("Nowy plik");
+		final Tooltip tooltipSend = new Tooltip("Wyślij plik na serwer");
+		final Tooltip tooltipClean = new Tooltip("Wyczyść pole z błędnym kodem");
+
+		newFile.setTooltip(tooltipNew);
+		sendFile.setTooltip(tooltipSend);
+		clean.setTooltip(tooltipClean);
 	}
 
 	@FXML
@@ -109,7 +125,7 @@ public class SkontrumController implements Initializable {
 						codeList.add(barcode);
 						// scroll listview
 						output.scrollTo(codeList.size());
-						
+
 						input.setEditable(true);
 						input.clear();
 						input.getStyleClass().removeAll("input");
