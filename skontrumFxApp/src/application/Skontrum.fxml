@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane prefHeight="300.0" prefWidth="250.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.SkontrumController">
+	<top>
+		<ToolBar prefWidth="200.0">
+			<items>
+				<Button fx:id="newFile" mnemonicParsing="false" onAction="#newFileAction" text="Nowy" />
+				<Button fx:id="sendFile" mnemonicParsing="false" onAction="#sendFileAction" text="Wyślij" />
+			</items>
+		</ToolBar>
+	</top>
+	<center>
+		<VBox spacing="2.0">
+			<children>
+				<ListView fx:id="output" VBox.vgrow="ALWAYS" />
+				<HBox alignment="CENTER_LEFT" spacing="2.0">
+					<children>
+						<TextField fx:id="input" maxHeight="25.0" prefHeight="25.0" HBox.hgrow="ALWAYS">
+							<VBox.margin>
+								<Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+							</VBox.margin>
+						</TextField>
+						<Button fx:id="clean" alignment="CENTER_RIGHT" mnemonicParsing="false" onAction="#cleanInputAction" text="Wyczyść" textAlignment="CENTER" />
+					</children>
+				</HBox>
+			</children>
+		</VBox>
+	</center>
+	<bottom>
+		<HBox alignment="CENTER_LEFT" fillHeight="false" maxHeight="-Infinity" prefHeight="20.0" spacing="2.0" BorderPane.alignment="CENTER">
+			<children>
+				<Label fx:id="status" maxHeight="20.0" text="Status" BorderPane.alignment="CENTER">
+					<padding>
+						<Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+					</padding>
+				</Label>
+			</children>
+		</HBox>
+	</bottom>
+	<padding>
+		<Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+	</padding>
+</BorderPane>
