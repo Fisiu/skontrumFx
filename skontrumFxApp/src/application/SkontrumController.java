@@ -17,6 +17,9 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 
+import org.controlsfx.dialog.DialogStyle;
+import org.controlsfx.dialog.Dialogs;
+
 public class SkontrumController implements Initializable {
 
 	private ObservableList<String> codeList;
@@ -130,24 +133,50 @@ public class SkontrumController implements Initializable {
 
 					@Override
 					public void run() {
+						int alreadyScanned = 0;
 						// add to list if not already added
 						if (!codeList.contains(barcode)) {
 							codeList.add(barcode);
-							counter.setText(String.valueOf(codeList.size()));
+							alreadyScanned = codeList.size();
+							counter.setText(String.valueOf(alreadyScanned));
 						} else {
 							System.out.println("Taki kod jest już na liście.");
 							// TODO Play some sound?
 						}
 						// scroll listview to make last item visible
-						output.scrollTo(codeList.size());
+						output.scrollTo(alreadyScanned);
 
 						input.setEditable(true);
 						input.clear();
 						input.getStyleClass().removeAll("input");
 						input.requestFocus();
+
+						if (alreadyScanned == 3 || alreadyScanned == 5 || alreadyScanned == 10) {
+							showPrizeDialog(alreadyScanned);
+						}
 					}
 				});
 			}
 		}.start();
+	}
+
+	private void showPrizeDialog(int scannedCout) {
+		Dialogs dialog = Dialogs.create();
+		dialog.style(DialogStyle.NATIVE);
+		dialog.title("Gratulacje");
+		switch (scannedCout) {
+		case 3:
+			dialog.message("Czas na przerwę!\nPrzeskanowanych książek: " + scannedCout + ".");
+			break;
+		case 5:
+			dialog.message("Czas na kawę!\nPrzeskanowanych książek: " + scannedCout + ".");
+			break;
+		case 10:
+			dialog.message("Zwolnij skanowanie!\nPrzeskanowanych książek: " + scannedCout + ".");
+			break;
+		default:
+			break;
+		}
+		dialog.showInformation();
 	}
 }
