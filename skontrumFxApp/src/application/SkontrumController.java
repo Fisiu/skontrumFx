@@ -130,8 +130,13 @@ public class SkontrumController implements Initializable {
 
 					@Override
 					public void run() {
-						// add to list
-						codeList.add(barcode);
+						// add to list if not already added
+						if (!codeList.contains(barcode)) {
+							codeList.add(barcode);
+						} else {
+							System.out.println("Taki kod jest już na liście.");
+							// TODO Play some sound?
+						}
 						// scroll listview to make last item visible
 						output.scrollTo(codeList.size());
 
