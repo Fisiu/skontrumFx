@@ -28,7 +28,7 @@ public class SkontrumController implements Initializable {
 	@FXML
 	private TextField input;
 	@FXML
-	private Label status;
+	private Label status, counter;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -133,6 +133,7 @@ public class SkontrumController implements Initializable {
 						// add to list if not already added
 						if (!codeList.contains(barcode)) {
 							codeList.add(barcode);
+							counter.setText(String.valueOf(codeList.size()));
 						} else {
 							System.out.println("Taki kod jest już na liście.");
 							// TODO Play some sound?
