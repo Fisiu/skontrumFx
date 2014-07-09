@@ -20,9 +20,12 @@ import javafx.scene.control.Tooltip;
 import org.controlsfx.dialog.DialogStyle;
 import org.controlsfx.dialog.Dialogs;
 
+import sound.Sound;
+
 public class SkontrumController implements Initializable {
 
 	private ObservableList<String> codeList;
+	private Sound sound;
 
 	@FXML
 	private Button newFile, sendFile, clean;
@@ -37,6 +40,7 @@ public class SkontrumController implements Initializable {
 	public void initialize(URL location, ResourceBundle resources) {
 
 		appendTooltips();
+		sound = Sound.getInstance();
 
 		codeList = FXCollections.observableArrayList();
 		output.setItems(codeList);
@@ -84,6 +88,8 @@ public class SkontrumController implements Initializable {
 	private void cleanInputAction(ActionEvent event) {
 		input.clear();
 		input.requestFocus();
+
+		sound.getCatYelling().play();
 	}
 
 	@FXML
