@@ -45,6 +45,14 @@ public class SkontrumController implements Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 
+		Optional<String> username = getUserLogin();
+		if (username.isPresent()) {
+			setStatus(username.get());
+		} else {
+			// no login = quit
+			System.exit(0);
+		}
+
 		appendTooltips();
 		sound = Sound.getInstance();
 
@@ -68,11 +76,6 @@ public class SkontrumController implements Initializable {
 				}
 			}
 		});
-
-		Optional<String> username = getUserLogin();
-		if (username.isPresent()) {
-			setStatus(username.get());
-		}
 
 		Platform.runLater(new Runnable() {
 
