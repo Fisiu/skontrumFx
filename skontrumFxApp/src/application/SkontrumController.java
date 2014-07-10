@@ -158,10 +158,7 @@ public class SkontrumController implements Initializable {
 						// scroll listview to make last item visible
 						output.scrollTo(alreadyScanned);
 
-						input.setEditable(true);
-						input.setStyle(null);
-						input.clear();
-						input.requestFocus();
+						cleanInputAction(null);
 
 						if (alreadyScanned == 3 || alreadyScanned == 5 || alreadyScanned == 10) {
 							showPrizeDialog(alreadyScanned);
