@@ -47,7 +47,6 @@ public class SkontrumController implements Initializable {
 
 		appendTooltips();
 		sound = Sound.getInstance();
-		timer = new Timer("rolex");
 
 		codeList = FXCollections.observableArrayList();
 		output.setItems(codeList);
@@ -63,6 +62,7 @@ public class SkontrumController implements Initializable {
 					input.setStyle("-fx-background-color: red;");
 
 					// create task and schedule it
+					timer = new Timer("rolex");
 					task = new BarcodeTimer();
 					timer.schedule(task, 2000);
 				}
@@ -234,6 +234,7 @@ public class SkontrumController implements Initializable {
 			} else {
 				lockDownInput();
 			}
+			timer.cancel();
 		}
 
 	}
