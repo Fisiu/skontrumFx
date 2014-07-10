@@ -1,6 +1,7 @@
 package application;
 
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -67,6 +68,11 @@ public class SkontrumController implements Initializable {
 				}
 			}
 		});
+
+		Optional<String> username = getUserLogin();
+		if (username.isPresent()) {
+			setStatus(username.get());
+		}
 
 		Platform.runLater(new Runnable() {
 
@@ -230,5 +236,24 @@ public class SkontrumController implements Initializable {
 			}
 		}
 
+	}
+
+	private Optional<String> getUserLogin() {
+		Dialogs dialog = Dialogs.create();
+		dialog.style(DialogStyle.NATIVE);
+		dialog.title("Nazwa użytkownika");
+		dialog.message("Wprowadź nazwę użytkownika");
+		return dialog.showTextInput();
+	}
+
+	public void setStatus(String newStatus) {
+		// update UI on FX thread
+		Platform.runLater(new Runnable() {
+
+			@Override
+			public void run() {
+				status.setText(newStatus);
+			}
+		});
 	}
 }
