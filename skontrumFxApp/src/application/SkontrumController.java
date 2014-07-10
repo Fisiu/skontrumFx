@@ -2,6 +2,8 @@ package application;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -24,7 +26,10 @@ import sound.Sound;
 
 public class SkontrumController implements Initializable {
 
+	private String barcode;
 	private ObservableList<String> codeList;
+	private Timer timer;
+	private TimerTask task;
 	private Sound sound;
 
 	@FXML
@@ -41,6 +46,7 @@ public class SkontrumController implements Initializable {
 
 		appendTooltips();
 		sound = Sound.getInstance();
+		timer = new Timer("rolex");
 
 		codeList = FXCollections.observableArrayList();
 		output.setItems(codeList);
@@ -49,15 +55,15 @@ public class SkontrumController implements Initializable {
 
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-				if (newValue.length() == 8) {
-					// TODO: validate input
-					String code = newValue;
-					addNewCode(code);
-				} else if (newValue.length() == 0) {
-					System.out.println("Wejście puste");
-					input.setStyle(null);
-				} else if (newValue.length() != 8) {
+				barcode = newValue;
+
+				// schedule new task when barcode starts appearing
+				if (newValue.length() == 1) {
 					input.setStyle("-fx-background-color: red;");
+
+					// create task and schedule it
+					task = new BarcodeTimer();
+					timer.schedule(task, 2000);
 				}
 			}
 		});
@@ -86,10 +92,10 @@ public class SkontrumController implements Initializable {
 
 	@FXML
 	private void cleanInputAction(ActionEvent event) {
+		input.setEditable(true);
+		input.setStyle(null);
 		input.clear();
 		input.requestFocus();
-
-		sound.getCatYelling().play();
 	}
 
 	@FXML
@@ -153,8 +159,8 @@ public class SkontrumController implements Initializable {
 						output.scrollTo(alreadyScanned);
 
 						input.setEditable(true);
+						input.setStyle(null);
 						input.clear();
-						input.getStyleClass().removeAll("input");
 						input.requestFocus();
 
 						if (alreadyScanned == 3 || alreadyScanned == 5 || alreadyScanned == 10) {
@@ -164,8 +170,33 @@ public class SkontrumController implements Initializable {
 				});
 			}
 		}.start();
+
 	}
 
+	/**
+	 * Sets input not editable and warn user with sound.
+	 */
+	private void lockDownInput() {
+
+		// update UI on FX thread
+		Platform.runLater(new Runnable() {
+
+			@Override
+			public void run() {
+				input.setEditable(false);
+			}
+		});
+
+		// notify user with some awesome sound ;-)
+		sound.getCatYelling().play();
+	}
+
+	/**
+	 * Shows simple prize dialogs.
+	 *
+	 * @param scannedCout
+	 *            Sum of scanned barcodes by user, prize depends on it.
+	 */
 	private void showPrizeDialog(int scannedCout) {
 		Dialogs dialog = Dialogs.create();
 		dialog.style(DialogStyle.NATIVE);
@@ -184,5 +215,23 @@ public class SkontrumController implements Initializable {
 			break;
 		}
 		dialog.showInformation();
+	}
+
+	/**
+	 * Simple task to handle entered/scanned barcode.
+	 */
+	private class BarcodeTimer extends TimerTask {
+
+		@Override
+		public void run() {
+			System.out.println(barcode);
+			if (barcode.length() == 8) {
+				// TODO Verify barcode
+				addNewCode(barcode);
+			} else {
+				lockDownInput();
+			}
+		}
+
 	}
 }
