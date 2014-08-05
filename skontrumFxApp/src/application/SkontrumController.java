@@ -46,7 +46,7 @@ public class SkontrumController implements Initializable {
 	public void initialize(URL location, ResourceBundle resources) {
 
 		Optional<String> username = getUserLogin();
-		if (username.isPresent()) {
+		if (username.isPresent() && username.get().length() != 0) {
 			setStatus(username.get());
 		} else {
 			// no login = quit
