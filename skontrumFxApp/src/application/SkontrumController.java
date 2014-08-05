@@ -1,6 +1,9 @@
 package application;
 
 import java.net.URL;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.Timer;
@@ -24,6 +27,7 @@ import org.controlsfx.dialog.DialogStyle;
 import org.controlsfx.dialog.Dialogs;
 
 import sound.Sound;
+import storage.Storage;
 
 public class SkontrumController implements Initializable {
 
@@ -32,6 +36,7 @@ public class SkontrumController implements Initializable {
 	private Timer timer;
 	private TimerTask task;
 	private Sound sound;
+	private Storage storage;
 
 	@FXML
 	private Button newFile, sendFile, clean;
@@ -84,6 +89,9 @@ public class SkontrumController implements Initializable {
 				input.requestFocus();
 			}
 		});
+
+		storage = new Storage(username.get() + "_" + getTimestamp());
+		storage.createFile();
 	}
 
 	/**
@@ -147,7 +155,10 @@ public class SkontrumController implements Initializable {
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-				// TODO Write barcode to file
+
+				// Write new barcode to file
+				storage.appendBarcode(barcode);
+				// TODO what if writing to file failed?
 
 				// update UI on FX thread
 				Platform.runLater(new Runnable() {
@@ -259,5 +270,15 @@ public class SkontrumController implements Initializable {
 				status.setText(newStatus);
 			}
 		});
+	}
+
+	/**
+	 * Get current date and time in format which can be used in filename.
+	 *
+	 * @return current datetime
+	 */
+	private String getTimestamp() {
+		LocalDateTime localDateTime = LocalDateTime.now(ZoneId.systemDefault());
+		return localDateTime.format(DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss"));
 	}
 }
