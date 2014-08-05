@@ -31,7 +31,7 @@ import storage.Storage;
 
 public class SkontrumController implements Initializable {
 
-	private String barcode;
+	private String user, barcode;
 	private ObservableList<String> codeList;
 	private Timer timer;
 	private TimerTask task;
@@ -52,7 +52,8 @@ public class SkontrumController implements Initializable {
 
 		Optional<String> username = getUserLogin();
 		if (username.isPresent() && username.get().length() != 0) {
-			setStatus(username.get());
+			user = username.get();
+			setStatus(user);
 		} else {
 			// no login = quit
 			System.exit(0);
@@ -90,7 +91,7 @@ public class SkontrumController implements Initializable {
 			}
 		});
 
-		storage = new Storage(username.get() + "_" + getTimestamp());
+		storage = new Storage(user + "-" + getTimestamp());
 		storage.createFile();
 	}
 
