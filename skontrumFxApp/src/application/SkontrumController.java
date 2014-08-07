@@ -59,7 +59,6 @@ public class SkontrumController implements Initializable {
 			System.exit(0);
 		}
 
-		appendTooltips();
 		sound = Sound.getInstance();
 
 		codeList = FXCollections.observableArrayList();
@@ -93,6 +92,8 @@ public class SkontrumController implements Initializable {
 
 		storage = new Storage(user + "-" + getTimestamp());
 		storage.createFile();
+
+		appendTooltips();
 	}
 
 	/**
@@ -102,10 +103,12 @@ public class SkontrumController implements Initializable {
 		final Tooltip tooltipNew = new Tooltip("Nowy plik");
 		final Tooltip tooltipSend = new Tooltip("Wyślij plik na serwer");
 		final Tooltip tooltipClean = new Tooltip("Wyczyść pole z błędnym kodem");
+		final Tooltip tooltipStatus = new Tooltip(storage.getPath().toString());
 
 		newFile.setTooltip(tooltipNew);
 		sendFile.setTooltip(tooltipSend);
 		clean.setTooltip(tooltipClean);
+		status.setTooltip(tooltipStatus);
 	}
 
 	@FXML

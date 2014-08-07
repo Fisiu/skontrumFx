@@ -19,6 +19,10 @@ public class Storage {
 		System.out.println("Data file is: " + path.toAbsolutePath().toString());
 	}
 
+	public Path getPath() {
+		return path;
+	}
+
 	/**
 	 * Create regular file in filesystem
 	 * 
