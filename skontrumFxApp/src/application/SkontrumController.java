@@ -99,6 +99,7 @@ public class SkontrumController implements Initializable {
 		storage = new Storage(user + "-" + getTimestamp());
 
 		appendTooltips();
+		updateStatusTooltip(storage.getPath().toString());
 	}
 
 	/**
@@ -130,12 +131,17 @@ public class SkontrumController implements Initializable {
 
 	@FXML
 	private void openFileAction(ActionEvent event) {
-		System.out.println("Otwórz");
 		FileChooser fileChooser = new FileChooser();
 
+		// set title and initial directory
+		fileChooser.setTitle("Otwórz plik...");
+		fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+
+		// set extension filter
 		ExtensionFilter extensionFilter = new ExtensionFilter("Pliki tekstowe (.txt)", "*.txt");
 		fileChooser.getExtensionFilters().add(extensionFilter);
 
+		// show dialog
 		File chosenFile = fileChooser.showOpenDialog(root.getScene().getWindow());
 		if (chosenFile != null) {
 			codeList.setAll(storage.openFile(chosenFile));
