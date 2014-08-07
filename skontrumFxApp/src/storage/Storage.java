@@ -53,6 +53,9 @@ public class Storage {
 	 * @return <code>true</code> if barcode was written into file, <code>false</code> otherwise
 	 */
 	public boolean appendBarcode(String barcode) {
+		if (Files.notExists(path)) {
+			createFile();
+		}
 		try (BufferedWriter writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8, options)) {
 			writer.write(barcode);
 			writer.newLine();

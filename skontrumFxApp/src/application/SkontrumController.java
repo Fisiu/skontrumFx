@@ -97,7 +97,6 @@ public class SkontrumController implements Initializable {
 		});
 
 		storage = new Storage(user + "-" + getTimestamp());
-		storage.createFile();
 
 		appendTooltips();
 	}
