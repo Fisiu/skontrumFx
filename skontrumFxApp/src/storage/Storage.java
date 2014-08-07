@@ -1,6 +1,8 @@
 package storage;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -8,6 +10,8 @@ import java.nio.file.OpenOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Storage {
 
@@ -21,6 +25,10 @@ public class Storage {
 
 	public Path getPath() {
 		return path;
+	}
+
+	public void setPath(Path path) {
+		this.path = path;
 	}
 
 	/**
@@ -53,5 +61,22 @@ public class Storage {
 			return false;
 		}
 		return true;
+	}
+
+	public List<String> openFile(File file) {
+		List<String> list = new ArrayList<String>();
+		if (!file.isDirectory() && file.canWrite()) {
+			path = Paths.get(file.getAbsolutePath());
+
+			try (BufferedReader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
+				String line = null;
+				while ((line = reader.readLine()) != null) {
+					list.add(line);
+				}
+			} catch (IOException e) {
+				System.err.format("IOException: %s%n", e);
+			}
+		}
+		return list;
 	}
 }

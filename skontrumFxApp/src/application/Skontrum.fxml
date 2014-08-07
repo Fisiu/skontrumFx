@@ -5,7 +5,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane prefHeight="300.0" prefWidth="250.0"
+<BorderPane fx:id="root" prefHeight="300.0" prefWidth="250.0"
 	xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
 	fx:controller="application.SkontrumController">
 	<top>
@@ -13,6 +13,8 @@
 			<items>
 				<Button fx:id="newFile" mnemonicParsing="false" onAction="#newFileAction"
 					text="Nowy" />
+				<Button fx:id="openFile" mnemonicParsing="false" onAction="#openFileAction"
+					text="Otwórz" />
 				<Button fx:id="sendFile" mnemonicParsing="false" onAction="#sendFileAction"
 					text="Wyślij" />
 			</items>

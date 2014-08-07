@@ -1,5 +1,6 @@
 package application;
 
+import java.io.File;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -17,11 +18,14 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 
 import org.controlsfx.dialog.DialogStyle;
 import org.controlsfx.dialog.Dialogs;
@@ -39,7 +43,9 @@ public class SkontrumController implements Initializable {
 	private Storage storage;
 
 	@FXML
-	private Button newFile, sendFile, clean;
+	private Parent root;
+	@FXML
+	private Button newFile, openFile, sendFile, clean;
 	@FXML
 	private ListView<String> output;
 	@FXML
@@ -103,12 +109,10 @@ public class SkontrumController implements Initializable {
 		final Tooltip tooltipNew = new Tooltip("Nowy plik");
 		final Tooltip tooltipSend = new Tooltip("Wyślij plik na serwer");
 		final Tooltip tooltipClean = new Tooltip("Wyczyść pole z błędnym kodem");
-		final Tooltip tooltipStatus = new Tooltip(storage.getPath().toString());
 
 		newFile.setTooltip(tooltipNew);
 		sendFile.setTooltip(tooltipSend);
 		clean.setTooltip(tooltipClean);
-		status.setTooltip(tooltipStatus);
 	}
 
 	@FXML
@@ -123,6 +127,22 @@ public class SkontrumController implements Initializable {
 	private void newFileAction(ActionEvent event) {
 		// TODO Create file which holds scanned barcodes
 		System.out.println("Nowy");
+	}
+
+	@FXML
+	private void openFileAction(ActionEvent event) {
+		System.out.println("Otwórz");
+		FileChooser fileChooser = new FileChooser();
+
+		ExtensionFilter extensionFilter = new ExtensionFilter("Pliki tekstowe (.txt)", "*.txt");
+		fileChooser.getExtensionFilters().add(extensionFilter);
+
+		File chosenFile = fileChooser.showOpenDialog(root.getScene().getWindow());
+		if (chosenFile != null) {
+			codeList.setAll(storage.openFile(chosenFile));
+			updateStatusTooltip(storage.getPath().toString());
+			cleanInputAction(event);
+		}
 	}
 
 	@FXML
@@ -267,12 +287,30 @@ public class SkontrumController implements Initializable {
 	}
 
 	public void setStatus(String newStatus) {
+
 		// update UI on FX thread
 		Platform.runLater(new Runnable() {
 
 			@Override
 			public void run() {
 				status.setText(newStatus);
+			}
+		});
+
+		if (storage != null) {
+			updateStatusTooltip(storage.getPath().toString());
+		}
+	}
+
+	public void updateStatusTooltip(String message) {
+		final Tooltip statusTooltip = new Tooltip(storage.getPath().toString());
+
+		// update UI on FX thread
+		Platform.runLater(new Runnable() {
+
+			@Override
+			public void run() {
+				status.setTooltip(statusTooltip);
 			}
 		});
 	}
