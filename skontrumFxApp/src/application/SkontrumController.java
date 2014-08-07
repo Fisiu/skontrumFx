@@ -127,6 +127,11 @@ public class SkontrumController implements Initializable {
 	private void newFileAction(ActionEvent event) {
 		// TODO Create file which holds scanned barcodes
 		System.out.println("Nowy");
+
+		codeList.clear();
+		storage = new Storage(user + "-" + getTimestamp());
+		updateStatusTooltip(storage.getPath().toString());
+		clean.fire();
 	}
 
 	@FXML
