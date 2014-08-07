@@ -157,10 +157,6 @@ public class SkontrumController implements Initializable {
 					e.printStackTrace();
 				}
 
-				// Write new barcode to file
-				storage.appendBarcode(barcode);
-				// TODO what if writing to file failed?
-
 				// update UI on FX thread
 				Platform.runLater(new Runnable() {
 
@@ -170,6 +166,11 @@ public class SkontrumController implements Initializable {
 						// add to list if not already added
 						if (!codeList.contains(barcode)) {
 							codeList.add(barcode);
+
+							// Write new barcode to file
+							storage.appendBarcode(barcode);
+							// TODO what if writing to file failed?
+
 							alreadyScanned = codeList.size();
 							counter.setText(String.valueOf(alreadyScanned));
 						} else {
