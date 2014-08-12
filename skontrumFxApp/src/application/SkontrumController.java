@@ -59,7 +59,6 @@ public class SkontrumController implements Initializable {
 		Optional<String> username = getUserLogin();
 		if (username.isPresent() && username.get().length() != 0) {
 			user = username.get();
-			setStatus(user);
 		} else {
 			// no login = quit
 			System.exit(0);
@@ -98,8 +97,8 @@ public class SkontrumController implements Initializable {
 
 		storage = new Storage(user + "-" + getTimestamp());
 
+		updateStatus();
 		appendTooltips();
-		updateStatusTooltip(storage.getPath().toString());
 	}
 
 	/**
@@ -130,7 +129,7 @@ public class SkontrumController implements Initializable {
 
 		codeList.clear();
 		storage = new Storage(user + "-" + getTimestamp());
-		updateStatusTooltip(storage.getPath().toString());
+		updateStatus();
 		clean.fire();
 	}
 
@@ -150,7 +149,7 @@ public class SkontrumController implements Initializable {
 		File chosenFile = fileChooser.showOpenDialog(root.getScene().getWindow());
 		if (chosenFile != null) {
 			codeList.setAll(storage.openFile(chosenFile));
-			updateStatusTooltip(storage.getPath().toString());
+			updateStatus();
 			cleanInputAction(event);
 		}
 	}
@@ -166,7 +165,7 @@ public class SkontrumController implements Initializable {
 	 * @param barcode
 	 *            Book barcode which is added to the list.
 	 */
-	private void addNewCode(String barcode) {
+	private void addNewCode(final String barcode) {
 
 		// separate non-FX thread
 		new Thread() {
@@ -296,7 +295,8 @@ public class SkontrumController implements Initializable {
 		return dialog.showTextInput();
 	}
 
-	public void setStatus(String newStatus) {
+	public void updateStatus() {
+		final String newStatus = storage.getPath().toString();
 
 		// update UI on FX thread
 		Platform.runLater(new Runnable() {
@@ -304,23 +304,6 @@ public class SkontrumController implements Initializable {
 			@Override
 			public void run() {
 				status.setText(newStatus);
-			}
-		});
-
-		if (storage != null) {
-			updateStatusTooltip(storage.getPath().toString());
-		}
-	}
-
-	public void updateStatusTooltip(String message) {
-		final Tooltip statusTooltip = new Tooltip(storage.getPath().toString());
-
-		// update UI on FX thread
-		Platform.runLater(new Runnable() {
-
-			@Override
-			public void run() {
-				status.setTooltip(statusTooltip);
 			}
 		});
 	}
