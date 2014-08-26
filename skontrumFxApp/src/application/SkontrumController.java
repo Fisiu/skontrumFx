@@ -16,12 +16,15 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.stage.FileChooser;
@@ -33,10 +36,12 @@ import org.controlsfx.dialog.Dialogs;
 import sound.Sound;
 import storage.Storage;
 
-public class SkontrumController implements Initializable {
+public class SkontrumController implements Initializable, EventHandler<ActionEvent> {
 
 	private String user, barcode;
 	private ObservableList<String> codeList;
+	private MenuItem deleteBarcode;
+	private ContextMenu contextMenu;
 	private Timer timer;
 	private TimerTask task;
 	private Sound sound;
@@ -68,6 +73,14 @@ public class SkontrumController implements Initializable {
 
 		codeList = FXCollections.observableArrayList();
 		output.setItems(codeList);
+
+		// Create a MenuItem and place it in a ContextMenu
+		deleteBarcode = new MenuItem("Usuń kod");
+		contextMenu = new ContextMenu(deleteBarcode);
+		// sets a cell factory on the ListView telling it to use the previously-created ContextMenu
+		output.setCellFactory(ContextMenuListCell.<String> forListView(contextMenu));
+
+		deleteBarcode.setOnAction(this);
 
 		input.textProperty().addListener(new ChangeListener<String>() {
 
@@ -316,5 +329,12 @@ public class SkontrumController implements Initializable {
 	private String getTimestamp() {
 		LocalDateTime localDateTime = LocalDateTime.now(ZoneId.systemDefault());
 		return localDateTime.format(DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss"));
+	}
+
+	@Override
+	public void handle(ActionEvent event) {
+		if (event.getSource().equals(deleteBarcode)) {
+			// remove item from list and from file
+		}
 	}
 }
