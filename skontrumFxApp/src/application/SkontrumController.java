@@ -334,7 +334,12 @@ public class SkontrumController implements Initializable, EventHandler<ActionEve
 	@Override
 	public void handle(ActionEvent event) {
 		if (event.getSource().equals(deleteBarcode)) {
-			// remove item from list and from file
+			// remove item from list...
+			int itemPos = output.getSelectionModel().getSelectedIndex();
+			codeList.remove(itemPos);
+
+			// ... and from file
+			storage.deleteBarcode(itemPos);
 		}
 	}
 }

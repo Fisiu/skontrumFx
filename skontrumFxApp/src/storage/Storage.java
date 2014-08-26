@@ -9,6 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.OpenOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +41,7 @@ public class Storage {
 		try {
 			Files.createFile(path);
 		} catch (IOException e) {
+			System.err.format("IOException: %s%n", e);
 			return false;
 		}
 		return true;
@@ -59,6 +61,42 @@ public class Storage {
 		try (BufferedWriter writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8, options)) {
 			writer.write(barcode);
 			writer.newLine();
+		} catch (IOException e) {
+			System.err.format("IOException: %s%n", e);
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Deletes specific barcode from file.
+	 * 
+	 * @param barcodeLine
+	 *            Barcode's line number which should be deleted from file.
+	 * @return <code>true</code> when barcode was successfully deleted, <code>false</code> otherwise.
+	 */
+	public boolean deleteBarcode(int barcodeLine) {
+		Path tmpPath = null;
+		try {
+			// create tmp file
+			tmpPath = Files.createFile(Paths.get(path.toString() + ".tmp"));
+
+			// read from path, write to tmpPath
+			try (BufferedReader reader = Files.newBufferedReader(path);
+					BufferedWriter writer = Files.newBufferedWriter(tmpPath, options);) {
+
+				String line = null;
+				int lineNo = 0;
+				while ((line = reader.readLine()) != null) {
+					if (lineNo != barcodeLine) {
+						writer.write(line);
+						writer.newLine();
+					}
+					lineNo++;
+				}
+			}
+			// replace original file with a new one
+			Files.move(tmpPath, path, StandardCopyOption.REPLACE_EXISTING);
 		} catch (IOException e) {
 			System.err.format("IOException: %s%n", e);
 			return false;
